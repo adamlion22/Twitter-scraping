@@ -1,0 +1,20 @@
+import re
+import pandas as pd
+
+# Read in the CSV file
+tweets_df = pd.read_csv('tweets.csv')
+
+# Define a function to clean the tweet text
+def clean_tweet(tweet):
+    # Use regular expressions to extract only alphabetic and numerical characters
+    cleaned_tweet = re.sub('[^a-zA-Z0-9]+', ' ', tweet)
+    return cleaned_tweet
+
+# Drop duplicates based on the "tweet" column
+tweets_df.drop_duplicates(subset='tweet', keep='first', inplace=True)
+
+# Apply the function to the "tweet" column
+tweets_df['cleaned_tweet'] = tweets_df['tweet'].apply(clean_tweet)
+
+# Write the cleaned data to a new CSV file
+tweets_df.to_csv('cleaned_tweets.csv', index=False)

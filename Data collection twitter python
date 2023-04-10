@@ -1,0 +1,27 @@
+import datetime
+import twint
+import nest_asyncio
+
+!pip install --upgrade git+https://github.com/kevctae/twint.git
+!pip install nest-asyncio
+
+nest_asyncio.apply()
+
+end_date = datetime.date.today()
+start_date = end_date - datetime.timedelta(days=365) # 1 year tweet
+
+search_terms = ['#Prasarana', '#KJLine', '#AnthonyLoke','#rapidkl','#AmpangLine','#SriPetalingLine','#Rapidrail','#askrapid','#JomNaikLRT','#BandarayaLRTStation']
+
+for term in search_terms:
+    config = twint.Config()
+    config.Search = term
+    config.Store_csv = True
+    config.Output = 'tweets.csv'
+    config.Since = start_date.strftime('%Y-%m-%d')
+    config.Until = end_date.strftime('%Y-%m-%d')
+
+    twint.run.Search(config)
+
+    # Print the search results
+    tweets = twint.output.tweets_list
+    print(tweets)

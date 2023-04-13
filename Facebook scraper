@@ -1,0 +1,36 @@
+import csv
+from facebook_scraper import get_posts, get_comments
+
+# Set the keyword to search for (in this case, "Prasarana")
+keyword = "Prasarana"
+
+# Create a list to hold the comments and posts data
+data = []
+
+# Retrieve posts containing the keyword
+for post in get_posts(keyword, pages=1):
+    post_data = {
+        'type': 'post',
+        'text': post['text'],
+        'date': post['time'],
+        'author': post['username']
+    }
+    data.append(post_data)
+
+    # Retrieve comments on the post containing the keyword
+    for comment in get_comments(post['post_url']):
+        comment_data = {
+            'type': 'comment',
+            'text': comment['text'],
+            'date': comment['time'],
+            'author': comment['author']
+        }
+        data.append(comment_data)
+
+# Write the comment and post data to a CSV file
+with open('prasarana_data.csv', mode='w', newline='', encoding='utf-8') as file:
+    fieldnames = ['type', 'text', 'date', 'author']
+    writer = csv.DictWriter(file, fieldnames=fieldnames)
+    writer.writeheader()
+    for row in data:
+        writer.writerow(row)
